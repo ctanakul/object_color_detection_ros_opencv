@@ -9,12 +9,13 @@ colorDetector::colorDetector()
     : it_(nh_)
 {
     image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1, &colorDetector::image_cb, this);
-    cv::namedWindow("Image Window");
+    lowH_ = 25;
+    cv::namedWindow("thresh_img", CV_WINDOW_AUTOSIZE); 
+    cv::createTrackbar("LowH", "thresh_img", &lowH_, 179);
 }
 
 void colorDetector::image_cb(const sensor_msgs::ImageConstPtr &msg)
 {
-    std::cout << "agjdsh" << std::endl;
     cv_bridge::CvImagePtr cv_ptr;
     try
     {
@@ -26,8 +27,17 @@ void colorDetector::image_cb(const sensor_msgs::ImageConstPtr &msg)
         return;
     }
 
+    if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60)
+        cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255, 0, 0));
+    cv::cvtColor(cv_ptr->image, cv_ptr->image, CV_BGR2HSV);
+
+    std::vector<int> low_hsv = {25, 83, 113};
+    std::vector<int> high_hsv = {86, 255, 255};
+
+    cv::inRange(cv_ptr->image, low_hsv, high_hsv, cv_ptr->image);
+
     cv::imshow("Image Window", cv_ptr->image);
-    cv::waitKey(3);
+    cv::waitKey(1);
 }
 
 int colorDetector::add(int a, int b)
