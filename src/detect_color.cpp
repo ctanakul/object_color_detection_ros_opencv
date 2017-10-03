@@ -9,9 +9,19 @@ colorDetector::colorDetector()
     : it_(nh_)
 {
     image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1, &colorDetector::image_cb, this);
-    lowH_ = 25;
-    cv::namedWindow("thresh_img", CV_WINDOW_AUTOSIZE); 
-    cv::createTrackbar("LowH", "thresh_img", &lowH_, 179);
+    low_h_ = 25;
+    high_h_ = 86;
+    low_s_ = 83;
+    high_s_ = 255;
+    low_v_ = 113;
+    high_v_ = 255;
+    cv::namedWindow("thresh_img", CV_WINDOW_AUTOSIZE);
+    cv::createTrackbar("low_h_", "thresh_img", &low_h_, 179);
+    cv::createTrackbar("high_h_", "thresh_img", &high_h_, 179);
+    cv::createTrackbar("low_s_", "thresh_img", &low_s_, 255);
+    cv::createTrackbar("high_s_", "thresh_img", &high_s_, 255);
+    cv::createTrackbar("low_v_", "thresh_img", &low_v_, 255);
+    cv::createTrackbar("high_v_", "thresh_img", &high_v_, 255);
 }
 
 void colorDetector::image_cb(const sensor_msgs::ImageConstPtr &msg)
@@ -31,8 +41,8 @@ void colorDetector::image_cb(const sensor_msgs::ImageConstPtr &msg)
         cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255, 0, 0));
     cv::cvtColor(cv_ptr->image, cv_ptr->image, CV_BGR2HSV);
 
-    std::vector<int> low_hsv = {25, 83, 113};
-    std::vector<int> high_hsv = {86, 255, 255};
+    std::vector<int> low_hsv = {low_h_, low_s_, low_v_};
+    std::vector<int> high_hsv = {high_h_, high_s_, high_v_};
 
     cv::inRange(cv_ptr->image, low_hsv, high_hsv, cv_ptr->image);
 

@@ -16,7 +16,7 @@ class colorDetector
         ros::NodeHandle nh_;
         image_transport::ImageTransport it_;
         image_transport::Subscriber image_sub_;
-        int lowH_;
+        int low_h_, high_h_, low_s_, high_s_, low_v_, high_v_;
 };
 
 #endif
