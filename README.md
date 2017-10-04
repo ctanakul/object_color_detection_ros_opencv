@@ -6,4 +6,4 @@ The script subscribes to roslaunch of openni2 to get image from Primesense devic
 The image color is then detected. The user can adjust the HSV threshold, the dilation and erosion kernal size.
 test
 
-[image]: https://github.com/ctanakul/object_color_detection_ros_opencv/blob/master/images.png 
+![alt text](https://github.com/ctanakul/object_color_detection_ros_opencv/blob/master/images.png "Example image")
